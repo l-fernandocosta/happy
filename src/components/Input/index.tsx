@@ -11,7 +11,6 @@ export  function Input({name, label, ...rest} : InputProps) {
       {!!label && <FormLabel htmlFor="email">{label}</FormLabel>}
       <ChakraInput
         id= {name}
-        placeholder="darthvader@outlook.com"
         focusBorderColor={"green.500"}
         bg="gray.900"
         color="whiteAlpha.500"
