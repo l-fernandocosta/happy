@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/react";
 export default function Logo(){
   return(
     <Flex as='text'
-    fontSize='3xl'
+    fontSize={['2xl','3xl', '4xl']}
     fontWeight={'bold'}
     w='40'
     px='4'

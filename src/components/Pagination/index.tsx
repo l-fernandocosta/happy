@@ -1,4 +1,5 @@
 import { Box, Button, HStack, Stack } from "@chakra-ui/react";
+import ButtonActive from "./ButtonActive";
 
 export default function Pagination() {
   return (
@@ -6,41 +7,13 @@ export default function Pagination() {
       <Box>
         <strong>0</strong> - <strong>10</strong> de <strong>100</strong> usuários
       </Box>
-      <HStack >
-        <Button
-          width={'4'}
-          fontSize={'xs'}
-          size='sm'
-          disabled
-          _disabled={{ cursor: 'default', bg: 'green.500' }}
-        >
-          1
-        </Button>
-        
-        <Button
-          width={'4'}
-          size={'sm'}
-          colorScheme='whiteAlpha'
-          fontSize={'xs'}>
-          2
-        </Button>
+      <HStack>
+        <ButtonActive number={1} isCurrent/>
+        <ButtonActive number={2} />
+        <ButtonActive number={3} />
+        <ButtonActive number={4} />
 
-        <Button
-          width={'4'}
-          size={'sm'}
-          colorScheme='whiteAlpha'
-          fontSize={'xs'}>
-          3
-        </Button>
-        <Button
-          width={'4'}
-          size={'sm'}
-          colorScheme='whiteAlpha'
-          fontSize={'xs'}>
-          4
-        </Button>
       </HStack>
-
     </Stack>
   )
 }
