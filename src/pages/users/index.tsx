@@ -10,7 +10,7 @@ export default function UserList() {
       <Header />
       <Flex w={'100%'} my='6' maxWidth={1480} mx='auto' padding={'6'}>
         <Sidebar />
-        <Box flex={'1'} bg='gray.800' p={'6'}>
+        <Box flex={'1'} bg='gray.800' p={'6'} borderRadius='6'>
           <Flex justify={'space-between'} mb="8" align={'center'}>
             <Heading size='sm' fontWeight={'normal'} color="gray.500">USUÁRIOS</Heading>
             <Button as="a" colorScheme={'whatsapp'} leftIcon={<Icon as={RiAddLine} />} size='sm'>Criar usuário </Button>
