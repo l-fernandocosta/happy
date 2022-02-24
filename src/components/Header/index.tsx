@@ -1,4 +1,6 @@
-import { Flex, useBreakpointValue } from '@chakra-ui/react'
+import { Flex, Icon, IconButton, useBreakpointValue } from '@chakra-ui/react'
+import { RiMenuLine } from 'react-icons/ri'
+import { useDrawerContext } from '../../contexts/DrawerContext'
 import Logo from './logo'
 import Notifications from './Notifications'
 import Profile from './Profile'
@@ -12,6 +14,7 @@ export default function Header() {
     lg: true
   })
 
+  const {onOpen} = useDrawerContext();
   return (
     <Flex
       as='header'
@@ -22,7 +25,16 @@ export default function Header() {
       px='6'
       mt='4'
       align='center'>
-
+      {!isWidedVersion && (
+        <IconButton
+          bg='gray.800'
+          aria-label='Drawer open'
+          icon={<Icon as={RiMenuLine}/>}
+          onClick={onOpen}
+          
+          />
+        
+      )}
       <Logo/>
       {isWidedVersion && <Searchbox/>}
 
