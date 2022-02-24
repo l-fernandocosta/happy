@@ -3,8 +3,7 @@ import { Box, color, Drawer, DrawerBody, DrawerCloseButton, DrawerContent,
 import NavDrawer from "./NavDrawer";
 
 import { useDrawerContext } from "../../contexts/DrawerContext";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+
 
 
 export default function Sidebar() {

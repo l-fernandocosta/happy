@@ -3,7 +3,7 @@ import ButtonActive from "./ButtonActive";
 
 export default function Pagination() {
   return (
-    <Stack spacing={'6'} mt='8' direction='row' justify={'space-between'} >
+    <Stack spacing={'6'} mt='8' direction={['column', 'row']} justify={'space-between'} align='center'>
       <Box>
         <strong>0</strong> - <strong>10</strong> de <strong>100</strong> usuários
       </Box>

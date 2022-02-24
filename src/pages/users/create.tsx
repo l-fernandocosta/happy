@@ -1,10 +1,16 @@
-import { Box, Button, Divider, Flex, Heading, HStack, Icon, SimpleGrid, Stack, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, Heading, HStack, Icon, SimpleGrid, Stack, useBreakpointValue, VStack } from "@chakra-ui/react";
+import Link from "next/link";
 import { RiPencilLine } from "react-icons/ri";
 import Header from "../../components/Header";
 import { Input } from "../../components/Input";
 import Sidebar from "../../components/Sidebar";
 
 export default function CreateUser() {
+  const variant = useBreakpointValue({
+    base: 'outline',
+    md: 'solid'
+  });
+
   return(
     <Box>
       <Header/>
@@ -30,8 +36,19 @@ export default function CreateUser() {
 
           <Flex  justify='flex-end' mt='8' >
             <HStack spacing={'4'}>
-              <Button as='a' colorScheme={'whiteAlpha'}>Cancelar</Button>
-              <Button as='a' colorScheme={'whatsapp'}>Salvar</Button>
+              <Link href={'/users'} passHref>
+                <Button
+                  variant={variant}
+                  as='a'
+                  colorScheme={'whiteAlpha'}>Cancelar</Button>
+              </Link>
+
+              <Button
+                as='a'
+                colorScheme={'whatsapp'}
+                variant={variant}
+                >Salvar</Button>
+
             </HStack>
           </Flex>
         </Box>
