@@ -1,19 +1,49 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
-import { RiAddLine, RiPencilLine } from "react-icons/ri";
+
+import { useEffect } from "react";
+import { RiAddLine } from "react-icons/ri";
+
 import Header from "../../components/Header";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
 
+import { useQuery } from 'react-query'
+
+
+
 export default function UserList() {
+  //hooks
   const isWideVersion = useBreakpointValue({
     base: false,
-    lg: true, 
+    lg: true,
   });
 
   const variant = useBreakpointValue({
     base: 'outline',
     md: 'solid'
+  });
+
+  const { data, isLoading, error } = useQuery('users', async () => {
+    const response = await fetch("http://localhost:3000/api/users")
+    const data = await response.json()
+    const users = (data.users.map((user) => {
+      return {
+        id: user.id,
+        email: user.email, 
+        name: user.name, 
+        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+          day: "2-digit",
+          month: "long",
+          year:"numeric"
+        })
+      }
+    }))
+
+
+    return users;
+  }, {
+    staleTime: 1000 * 5 //5 seconds 
   });
 
 
@@ -31,40 +61,50 @@ export default function UserList() {
                 as="a"
                 colorScheme={'whatsapp'}
                 leftIcon={<Icon
-                as={RiAddLine}
-                
+                  as={RiAddLine}
+
                 />}
                 size='sm'>Criar usuário
-                </Button>
+              </Button>
             </Link>
           </Flex>
-          <Table colorScheme={'whiteAlpha'}>
+          {isLoading ? (
+            <Flex justify={"center"}><Spinner></Spinner></Flex>
 
-            <Thead >
-              <Tr>
-                <Th><Checkbox colorScheme={'whatsapp'} px='6'/></Th>
-                <Th>Usuário</Th>
-                {isWideVersion && <Th>Data de Cadastro</Th>}
-                
-              </Tr>
-            </Thead>
+          ) : error ? (
+            <Text align={"center"}>Não conseguimos encontrar os dados 😢</Text>
+          ) : (
+            <>
+              <Table colorScheme={'whiteAlpha'}>
 
-            <Tbody>
-              <Tr>
-                <Td><Checkbox colorScheme={'whatsapp'} px='6' /></Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight={'bold'}>Fernando Costa</Text>
-                    <Text fontSize={'sm'} color='gray.500'>fernandocostadev98@gmail.com</Text>
-                  </Box>
-                </Td>
-               {isWideVersion && <Td fontWeight={'light'}>22 de Fevereiro, 2022</Td>}
-              
+                <Thead >
+                  <Tr>
+                    <Th><Checkbox colorScheme={'whatsapp'} px='6' /></Th>
+                    <Th>Usuário</Th>
+                    {isWideVersion && <Th>Data de Cadastro</Th>}
 
-              </Tr>
-            </Tbody>
-          </Table>
-          <Pagination/>
+                  </Tr>
+                </Thead>
+
+                <Tbody>
+                  {data.map((user) => (
+                  <Tr key={user.id}>
+                    <Td><Checkbox colorScheme={'whatsapp'} px='6'/></Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight={'bold'}>{user.name}</Text>
+                        <Text fontSize={'sm'} color='gray.500'>{user.email}</Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td fontWeight={'light'}>{user.createdAt}</Td>}
+
+
+                  </Tr>))}
+                </Tbody>
+              </Table>
+              <Pagination />
+            </>
+          )}
         </Box>
 
       </Flex>

@@ -22,16 +22,16 @@ export function makeServer({environment = 'test'} = {}){
           return `User ${i + 1 }`
         },
         email(){
-          return faker.internet.email()
+          return faker.internet.email().toLowerCase()
         },
-        createAt() {
+        createdAt() {
           return faker.date.recent(10)
         }
       })
     },
 
     seeds(server) {
-      server.createList("user", 200)
+      server.createList("user", 10)
     },
 
     routes(){
@@ -40,7 +40,7 @@ export function makeServer({environment = 'test'} = {}){
       this.get("/users");
       this.post("/users");
 
-      this.timing=750;
+      this.timing=2000;
       this.namespace='';
       this.passthrough();
     }
