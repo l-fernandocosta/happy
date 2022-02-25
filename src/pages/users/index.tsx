@@ -1,14 +1,13 @@
 import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 
-import { useEffect } from "react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiRefreshLine } from "react-icons/ri";
 
 import Header from "../../components/Header";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
 
-import { useQuery } from 'react-query'
+import { useUsers } from "../../services/hooks/useUsers";
 
 
 
@@ -24,28 +23,7 @@ export default function UserList() {
     md: 'solid'
   });
 
-  const { data, isLoading, error } = useQuery('users', async () => {
-    const response = await fetch("http://localhost:3000/api/users")
-    const data = await response.json()
-    const users = (data.users.map((user) => {
-      return {
-        id: user.id,
-        email: user.email, 
-        name: user.name, 
-        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
-          day: "2-digit",
-          month: "long",
-          year:"numeric"
-        })
-      }
-    }))
-
-
-    return users;
-  }, {
-    staleTime: 1000 * 5 //5 seconds 
-  });
-
+  const { data, isLoading, error, isFetching, refetch} = useUsers()
 
   return (
     <Box overflowX={['auto', 'hidden']}>
@@ -53,20 +31,40 @@ export default function UserList() {
       <Flex w={'100%'} my='6' maxWidth={1480} mx='auto' padding={'6'}>
         <Sidebar />
         <Box flex={'1'} bg='gray.800' p={'6'} borderRadius='6' >
-          <Flex justify={'space-between'} mb="8" align={'center'}>
-            <Heading size='sm' fontWeight={'normal'} color="gray.500">USUÁRIOS</Heading>
-            <Link href={'/users/create'} passHref>
-              <Button
-                variant={variant}
-                as="a"
-                colorScheme={'whatsapp'}
-                leftIcon={<Icon
-                  as={RiAddLine}
+          <Flex justify={'space-between'} mb="8" align={"center"}>
+            
+            <Heading
+              
+              size='sm'
+              fontWeight={'normal'}
+              color="gray.500">USUÁRIOS
+              {!isLoading && isFetching && (<Spinner size={"sm"} ml="2"></Spinner>)}
+              </Heading>
+              <Flex>
+              <Link href={'/users/create'} passHref>
+                <Button
 
-                />}
-                size='sm'>Criar usuário
-              </Button>
-            </Link>
+                  mr={"2"}
+                  variant={variant}
+                  as="a"
+                  colorScheme={'whatsapp'}
+                  leftIcon={<Icon
+                    as={RiAddLine}
+
+                  />}
+                  size='sm'>Criar usuário
+                </Button>
+              </Link>
+              <Button
+                isLoading={isFetching}
+                colorScheme={"facebook"}
+                size="sm"
+                rightIcon={<RiRefreshLine />}
+                // @ts-ignore
+                onClick={refetch}>Refresh</Button>      
+
+              </Flex>
+
           </Flex>
           {isLoading ? (
             <Flex justify={"center"}><Spinner></Spinner></Flex>
