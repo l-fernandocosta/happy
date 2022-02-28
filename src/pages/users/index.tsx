@@ -1,4 +1,12 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Link, 
+  Popover, Spinner, Table, Tbody, Td, Text, 
+  Th, Thead, Tr, useBreakpoint, useBreakpointValue,
+  PopoverTrigger, 
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody} from "@chakra-ui/react";
 import NextLink  from "next/link";
 import { useState } from "react";
 
@@ -108,11 +116,26 @@ export default function UserList() {
                       <Td><Checkbox colorScheme={'whatsapp'} px='6' /></Td>
                         <Td >
                           <Box >
-                            <Link
-                              _hover={{color:"whatsapp.400"}}
-                              onMouseEnter={()=> {handlePrefetchUser(user.id)}}>
-                              <Text fontWeight={'bold'}>{user.name}</Text>
-                            </Link> 
+                           <Popover>
+                             <PopoverTrigger>
+                               <Link
+                                  _hover={{color:"whatsapp.400"}}
+                                  onMouseEnter={()=> {handlePrefetchUser(user.id)}}>
+                                  <Text fontWeight={'bold'}>{user.name}</Text>
+                                </Link> 
+                               
+                             </PopoverTrigger>
+                             <PopoverContent bg="whatsapp.400" color="white">
+                                <PopoverHeader fontWeight={"bold"}>Usuário: {user.email}</PopoverHeader>
+                                  <PopoverArrow/>
+                                  <PopoverCloseButton/>
+                                  <PopoverBody>
+                                    Data de criação: {user.createdAt}
+
+                                  </PopoverBody>
+                             </PopoverContent>
+                           </Popover>
+                           
                             <Text fontSize={'sm'} color='gray.500'>{user.email}</Text>
                           </Box>
                         </Td>

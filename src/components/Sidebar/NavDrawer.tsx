@@ -12,10 +12,7 @@ export default function NavDrawer() {
             <NavLink href={'/users'} icon={RiContactsLine} title={'Users'}/>
         </NavSection>
 
-        <NavSection title="AUTOMATION">
-          <NavLink href={'/forms'}icon={RiInputMethodLine} title={'Formularies'}></NavLink>
-          <NavLink href={'/automation'} icon={RiGitMergeLine} title={"Automation"}></NavLink>
-        </NavSection>
+
           
       </Stack>
   )
