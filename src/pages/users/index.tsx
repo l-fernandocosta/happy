@@ -1,17 +1,23 @@
-import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Link, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpoint, useBreakpointValue } from "@chakra-ui/react";
+import NextLink  from "next/link";
+import { useState } from "react";
 
 import { RiAddLine, RiRefreshLine } from "react-icons/ri";
 
 import Header from "../../components/Header";
 import Pagination from "../../components/Pagination";
 import Sidebar from "../../components/Sidebar";
+import { api } from "../../services/axios";
 
 import { useUsers } from "../../services/hooks/useUsers";
+import { queryClient } from "../../services/queryClient";
 
 
 
 export default function UserList() {
+
+  const [page, setPage] = useState(1);
+
   //hooks
   const isWideVersion = useBreakpointValue({
     base: false,
@@ -23,7 +29,18 @@ export default function UserList() {
     md: 'solid'
   });
 
-  const { data, isLoading, error, isFetching, refetch} = useUsers()
+  const { data, isLoading, error, isFetching, refetch } = useUsers(page)
+
+
+
+  async function  handlePrefetchUser(userId: number) {
+    await queryClient.prefetchQuery(['users', userId], async () => {
+      const response = await api.get(`/users/${userId}`);
+      return response.data
+    }, {
+      staleTime: 1000 * 60 * 10 //10 minutes
+    })
+  }
 
   return (
     <Box overflowX={['auto', 'hidden']}>
@@ -32,16 +49,16 @@ export default function UserList() {
         <Sidebar />
         <Box flex={'1'} bg='gray.800' p={'6'} borderRadius='6' >
           <Flex justify={'space-between'} mb="8" align={"center"}>
-            
+
             <Heading
-              
+
               size='sm'
               fontWeight={'normal'}
               color="gray.500">USUÁRIOS
               {!isLoading && isFetching && (<Spinner size={"sm"} ml="2"></Spinner>)}
-              </Heading>
-              <Flex>
-              <Link href={'/users/create'} passHref>
+            </Heading>
+            <Flex>
+              <NextLink href={'/users/create'} passHref>
                 <Button
 
                   mr={"2"}
@@ -54,16 +71,17 @@ export default function UserList() {
                   />}
                   size='sm'>Criar usuário
                 </Button>
-              </Link>
+              </NextLink>
               <Button
                 isLoading={isFetching}
                 colorScheme={"facebook"}
                 size="sm"
                 rightIcon={<RiRefreshLine />}
                 // @ts-ignore
-                onClick={refetch}>Refresh</Button>      
+                onClick={refetch}>Refresh</Button>
 
-              </Flex>
+            </Flex>
+
 
           </Flex>
           {isLoading ? (
@@ -85,25 +103,31 @@ export default function UserList() {
                 </Thead>
 
                 <Tbody>
-                  {data.map((user) => (
-                  <Tr key={user.id}>
-                    <Td><Checkbox colorScheme={'whatsapp'} px='6'/></Td>
-                    <Td>
-                      <Box>
-                        <Text fontWeight={'bold'}>{user.name}</Text>
-                        <Text fontSize={'sm'} color='gray.500'>{user.email}</Text>
-                      </Box>
-                    </Td>
-                    {isWideVersion && <Td fontWeight={'light'}>{user.createdAt}</Td>}
+                  {data.users.map((user) => (
+                    <Tr key={user.id}>
+                      <Td><Checkbox colorScheme={'whatsapp'} px='6' /></Td>
+                        <Td >
+                          <Box >
+                            <Link
+                              _hover={{color:"whatsapp.400"}}
+                              onMouseEnter={()=> {handlePrefetchUser(user.id)}}>
+                              <Text fontWeight={'bold'}>{user.name}</Text>
+                            </Link> 
+                            <Text fontSize={'sm'} color='gray.500'>{user.email}</Text>
+                          </Box>
+                        </Td>
+                        {isWideVersion && <Td fontWeight={'light'}>{user.createdAt}</Td>}
+                      
 
 
-                  </Tr>))}
+
+                    </Tr>))}
                 </Tbody>
               </Table>
               <Pagination
-                totalCountOfRegisters={200}
-                currentPage={5}
-                onPageChange={() => {}} />
+                totalCountOfRegisters={data.totalCount}
+                currentPage={page}
+                onPageChange={setPage} />
             </>
           )}
         </Box>

@@ -5,7 +5,7 @@ interface PaginationProps {
   totalCountOfRegisters: number;
   registersPerPage?: number;
   currentPage?: number, 
-  onPageChange: (page: number) => void; 
+  onPageChange: (page: number | any) => void; 
 }
 
 const siblingsCount = 1;
@@ -45,25 +45,24 @@ export default function Pagination({
       <Stack direction={'row'} spacing={'2'}>
         {currentPage > (1 + siblingsCount) && (
           <>
-            <ButtonActive number = {1}></ButtonActive>
+            <ButtonActive onPageChange={onPageChange} number = {1}/>
             {currentPage > (2 + siblingsCount) && <Text align={"center"} width="8">...</Text>}
           </>
         )}
         {previousPages.length > 0 && previousPages.map((page) => {
-          return <ButtonActive  key={page} number={page}></ButtonActive>
+          return <ButtonActive  onPageChange={onPageChange} key={page} number={page}  />
         }) }
 
-        <ButtonActive number={currentPage} isCurrent></ButtonActive>
+        <ButtonActive onPageChange={onPageChange} number={currentPage} isCurrent />
 
       {nextPages.length > 0 && nextPages.map(page => {
-        console.log(nextPages)
-        return <ButtonActive key={page} number={page}></ButtonActive>
+        return <ButtonActive  onPageChange={onPageChange}key={page} number={page}/>
       })}
 
       {(currentPage + siblingsCount) < lastPage && (
           <>
             {(currentPage + 1 +  siblingsCount) < lastPage && <Text align={"center"} width="8">...</Text>}
-            <ButtonActive  number = {lastPage}></ButtonActive>
+            <ButtonActive   onPageChange={onPageChange}number = {lastPage}/>
           </>
         )}
       </Stack>

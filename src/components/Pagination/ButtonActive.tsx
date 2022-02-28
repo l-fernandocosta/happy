@@ -1,11 +1,12 @@
 import { Button, ButtonProps as ChakraButtonProps } from "@chakra-ui/react";
 interface ButtonProps extends ChakraButtonProps {
   isCurrent?: boolean;
-  number: number
+  number: number,
+  onPageChange: (page: number | undefined) => void;
 };
 
 
-export default function ButtonActive({ isCurrent = false, number }: ButtonProps) {
+export default function ButtonActive({ isCurrent = false, number, onPageChange }: ButtonProps) {
   if (isCurrent) {
     return (
       
@@ -23,11 +24,13 @@ export default function ButtonActive({ isCurrent = false, number }: ButtonProps)
   } 
    return(
       <Button
+        onClick = {() => onPageChange(number)}  
         width={'4'}
         size={'sm'}
         colorScheme='whiteAlpha'
         fontSize={'xs'}>
         {number}
+        
       </Button>
    )
   }

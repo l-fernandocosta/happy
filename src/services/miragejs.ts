@@ -53,8 +53,9 @@ export function makeServer({environment = 'test'} = {}){
         )
       });
       this.post("/users");
+      this.get("/users/:id")
 
-      this.timing=2000;
+      this.timing=1000;
       this.namespace='';
       this.passthrough();
     }
