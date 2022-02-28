@@ -1,12 +1,23 @@
-import { Box, Button, Divider, Flex, Heading, HStack, Icon, SimpleGrid, useBreakpointValue, VStack } from "@chakra-ui/react";
+//chakra imports
+import { Box, Button, Divider, Flex, 
+  Heading, HStack, Icon, 
+  SimpleGrid, useBreakpointValue, VStack } from "@chakra-ui/react";
+
 import Link from "next/link";
+
 import { RiPencilLine } from "react-icons/ri";
+// components
 import Header from "../../components/Header";
 import { Input } from "../../components/Input";
 import Sidebar from "../../components/Sidebar";
+//forms
 import * as yup from 'yup';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup'
+import { useMutation } from "react-query";
+import { api } from "../../services/axios";
+import { queryClient } from "../../services/queryClient";
+import { useRouter } from "next/router";
 
 
 interface CreateUserData {
@@ -35,9 +46,27 @@ export default function CreateUser() {
     md: 'solid'
   });
 
-  const handleCreateUser: SubmitHandler<CreateUserData> = async (d) => {
+  const {push} = useRouter();
+  const createUser = useMutation(async (user:CreateUserData) => {
+    const response = await api.post("/users", {
+      user: {
+        ...user,
+        created_at: new Date().toLocaleDateString("pt-BR")
+      }
+    })
+    return response.data.user;
+  
+  }, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['users', 1])
+      push("/users")
+    }
+  })
+
+
+  const handleCreateUser: SubmitHandler<CreateUserData> = async (values:CreateUserData) => {
     await new Promise((resolve) =>  setTimeout(resolve, 2000))
-    alert(JSON.stringify(d))
+    createUser.mutateAsync(values);
   }
 
   return(

@@ -1,4 +1,4 @@
-import {createServer, Factory, Model, Response} from 'miragejs';
+import {ActiveModelSerializer, createServer, Factory, Model, Response} from 'miragejs';
 import faker from "@faker-js/faker"
 
 type UserProps = {
@@ -15,6 +15,9 @@ export function makeServer({environment = 'test'} = {}){
     models: {
       user: Model.extend<Partial<UserProps>>({}), 
     }, 
+    serializers: {
+      application: ActiveModelSerializer
+    },
 
     factories: {
       user: Factory.extend({
@@ -25,6 +28,7 @@ export function makeServer({environment = 'test'} = {}){
           return faker.internet.email().toLowerCase()
         },
         createdAt() {
+          
           return faker.date.recent(10)
         }
       })
